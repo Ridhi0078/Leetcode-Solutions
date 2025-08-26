@@ -1,0 +1,54 @@
+class Pair {
+    int currId;
+    int currLevel;
+
+    public Pair(int currId, int currLevel) {
+        this.currId = currId;
+        this.currLevel = currLevel;
+    }
+}
+
+class Solution {
+    public List<String> watchedVideosByFriends(List<List<String>> watchedVideos, int[][] friends, int id, int level) {
+        Queue<Pair> q = new LinkedList<>();
+        boolean vis[] = new boolean[watchedVideos.size()];
+        vis[id] = true;
+        q.add(new Pair(id, 0));
+        HashMap<String, Integer> map = new HashMap<>();
+
+        while (!q.isEmpty()) {
+            Pair p = q.poll();
+            int currNode = p.currId;
+            int currLevel = p.currLevel;
+
+            if (currLevel > level) {
+                break;
+            }
+
+            if (currLevel == level) {
+                for (String s : watchedVideos.get(currNode)) {
+                    map.put(s, map.getOrDefault(s, 0) + 1);
+                }
+            }
+
+            for (int friend : friends[currNode]) {
+                if (!vis[friend]) {
+                    vis[friend] = true;
+                    q.add(new Pair(friend, currLevel + 1));
+                }
+            }
+        }
+
+        List<String> str = new ArrayList<>(map.keySet());
+
+        // sorting with respect to frequencies of each particular string
+        str.sort((k1, k2) -> {
+            int cmp = map.get(k1).compareTo(map.get(k2));
+            if (cmp == 0) {
+                return k1.compareTo(k2);
+            }
+            return cmp;
+        });
+        return str;
+    }
+}
