@@ -1,0 +1,33 @@
+class Solution {
+    public int gcdOfOddEvenSums(int n) {
+        int sumOdd = 0;
+        int sumEven = 0;
+        int countOfOdd = n;
+        int countOfEven = n;
+        int num1 = 1;
+        int num2 = 1;
+
+        while (countOfOdd > 0) {
+            if (num1 % 2 == 1) {
+                sumOdd += num1;
+            }
+            countOfOdd--;
+        }
+
+        while (countOfEven > 0) {
+            if (num2 % 2 == 0) {
+                sumEven += num2;
+            }
+            countOfEven--;
+        }
+
+        return findGCDRecursive(sumOdd, sumEven);
+    }
+
+    public int findGCDRecursive(int a, int b) {
+        if (b == 0) {
+            return Math.abs(a);
+        }
+        return findGCDRecursive(b, a % b);
+    }
+}
