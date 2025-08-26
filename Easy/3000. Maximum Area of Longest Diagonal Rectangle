@@ -1,0 +1,25 @@
+class Solution {
+    public double find(int l, int b) {
+        return Math.sqrt(l * l + b * b);
+    }
+
+    public int areaOfMaxDiagonal(int[][] dimensions) {
+        int n = dimensions.length;
+        double max = 0;
+        int maxArea=0;
+
+        for (int i = 0; i < n; i++) {
+            int length = dimensions[i][0];
+            int width = dimensions[i][1];
+
+            double longestDiag = find(length, width);
+            int area=length*width;
+
+            if (longestDiag > max || (longestDiag==max && area>maxArea)) {
+                max = longestDiag;
+                maxArea=area;
+            }
+        }
+        return maxArea;
+    }
+}
