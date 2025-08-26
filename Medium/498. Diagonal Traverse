@@ -1,0 +1,46 @@
+class Solution {
+    public int[] findDiagonalOrder(int[][] mat) {
+        /**
+        {{1,2,3},
+         {4,5,6},
+         {7,8,9}}
+        
+         in res the order of elements that are added in diagonal form is
+         [(0,0),(0,1),(1,0),(2,0),(1,1),(0,2),(1,2),(2,1),(2,2)]
+         hence we can see that the element for which (i+j) is equal are getting added in a sequence hence we can identify those element by building a hashmap and then add them in an array
+         */
+        if (mat == null || mat.length == 0 || mat[0].length == 0) {
+            return new int[0];
+        }
+
+        int row = mat.length;
+        int col = mat[0].length;
+
+        HashMap<Integer, List<Integer>> map = new HashMap<>();
+
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                int sum = i + j;
+                map.putIfAbsent(sum, new ArrayList<>());
+                map.get(sum).add(mat[i][j]);
+            }
+        }
+
+        List<Integer> ans = new ArrayList<>();
+
+        for (int i = 0; i < row + col - 1; i++) {
+            List<Integer> list = map.get(i);
+
+            if (i % 2 == 0) {
+                Collections.reverse(list);
+            }
+            ans.addAll(list);
+        }
+
+        int res[] = new int[ans.size()];
+        for (int i = 0; i < ans.size(); i++) {
+            res[i] = ans.get(i);
+        }
+        return res;
+    }
+}
