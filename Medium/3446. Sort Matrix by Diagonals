@@ -1,0 +1,44 @@
+class Solution {
+    public void sortDiagonal(int row, int col, int[][] grid, boolean ascending) {
+        int n = grid.length;
+        List<Integer> list = new ArrayList<>();
+
+        int i = row;
+        int j = col;
+
+        while (i < n && j < n) {
+            list.add(grid[i][j]);
+            i++;
+            j++;
+        }
+        if (ascending) {
+            Collections.sort(list);
+        } else {
+            list.sort(Collections.reverseOrder());
+        }
+
+        i = row;
+        j = col;
+
+        for (int val : list) {
+            grid[i][j] = val;
+            i++;
+            j++;
+        }
+    }
+
+    public int[][] sortMatrix(int[][] grid) {
+        int n = grid.length;
+
+        // Bottom left diagonals, sorted in decreasing order
+        for (int row = 0; row < n; row++) {
+            sortDiagonal(row, 0, grid, false);
+        }
+
+        // Top right diagonals, sorted in increasing order
+        for (int col = 1; col < n; col++) {
+            sortDiagonal(0, col, grid, true);
+        }
+        return grid;
+    }
+}
