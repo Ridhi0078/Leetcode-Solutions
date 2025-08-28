@@ -1,0 +1,38 @@
+class Solution {
+    public void sortDiagonal(int row, int col, int mat[][]){
+        List<Integer> list=new ArrayList<>();
+        int r=mat.length;
+        int c=mat[0].length;
+        int i=row;
+        int j=col;
+
+        while(i<r && j<c){
+            list.add(mat[i][j]);
+            i++;
+            j++;
+        }
+        Collections.sort(list);
+        i=row;
+        j=col;
+        for(int ele:list){
+            mat[i][j]=ele;
+            i++;
+            j++;
+        }
+    }
+    public int[][] diagonalSort(int[][] mat) {
+        int row=mat.length;
+        int col=mat[0].length;
+
+        // for lower diagonal matrix
+        for(int i=0;i<row;i++){
+            sortDiagonal(i,0,mat);
+        }
+
+        // for upper diagonal matrix
+        for(int j=1;j<col;j++){
+            sortDiagonal(0,j,mat);
+        }
+        return mat;
+    }
+}
