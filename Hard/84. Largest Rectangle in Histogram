@@ -1,0 +1,53 @@
+class Solution {
+    public int largestRectangleArea(int[] heights) {
+        // in this question we will follow the technique of previous smaller and next smaller element in the stack.
+        int n = heights.length;
+        int leftSmallIdx[] = new int[n];
+        int rightSmallIdx[] = new int[n];
+
+        Stack<Integer> st = new Stack<>();
+        // firstly computing the matrix of leftSmaller element
+        for (int i = 0; i < n; i++) {
+            while (!st.isEmpty() && heights[st.peek()] >= heights[i]) {
+                st.pop();
+            }
+
+            if (st.isEmpty()) {
+                leftSmallIdx[i] = 0;
+            } else {
+                leftSmallIdx[i] = st.peek() + 1;
+            }
+            st.push(i);
+        }
+
+        // for(int i=0;i<n;i++){
+        //     System.out.print(leftSmallIdx[i]+" ");
+        // }
+        st.clear();
+
+        // now calculate the matrix of rightSmaller element
+        for (int i = n - 1; i >= 0; i--) {
+            while (!st.isEmpty() && heights[st.peek()] >= heights[i]) {
+                st.pop();
+            }
+
+            if (st.isEmpty()) {
+                rightSmallIdx[i] = n;
+            } else {
+                rightSmallIdx[i] = st.peek();
+            }
+            st.push(i);
+        }
+
+        // for(int i=0;i<n;i++){
+        //     System.out.print(rightSmallIdx[i]+" ");
+        // }
+
+        int max = 0;
+        for (int i = 0; i < n; i++) {
+            max = Math.max(max, heights[i] * (rightSmallIdx[i] - leftSmallIdx[i]));
+        }
+
+        return max;
+    }
+}
