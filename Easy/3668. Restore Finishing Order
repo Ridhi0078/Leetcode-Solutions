@@ -1,0 +1,21 @@
+class Solution {
+    public int[] recoverOrder(int[] order, int[] friends) {
+        HashSet<Integer> friendSet = new HashSet<>();
+        List<Integer> list = new ArrayList<>();
+        for (int friend : friends) {
+            friendSet.add(friend);
+        }
+
+        for (int orders : order) {
+            if (friendSet.contains(orders)) {
+                list.add(orders);
+            }
+        }
+        int arr[] = new int[list.size()];
+
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = list.get(i);
+        }
+        return arr;
+    }
+}
