@@ -3,7 +3,6 @@ class Solution {
         int area = 0;
         int overlapArea = 0;
         int cx1 = 0, cx2 = 0, cy1 = 0, cy2 = 0;
-
         area = (ax2 - ax1) * (ay2 - ay1) + (bx2 - bx1) * (by2 - by1);
 
         cx1 = Math.max(ax1, bx1);
