@@ -1,0 +1,54 @@
+class Task {
+    int startTime;
+    int processingTime;
+    int idx;
+
+    public Task(int startTime, int processingTime, int idx) {
+        this.startTime = startTime;
+        this.processingTime = processingTime;
+        this.idx = idx;
+    }
+}
+
+class Solution {
+    public int[] getOrder(int[][] tasks) {
+        int n = tasks.length;
+
+        Task[] sortedArr = new Task[n];
+
+        for (int i = 0; i < tasks.length; i++) {
+            sortedArr[i] = new Task(tasks[i][0], tasks[i][1], i);
+        }
+
+        // sorting the task by start Time
+
+        Arrays.sort(sortedArr, (a, b) -> Integer.compare(a.startTime, b.startTime));
+
+        PriorityQueue<Task> pq = new PriorityQueue<>(
+                (a, b) -> a.processingTime == b.processingTime ? Integer.compare(a.idx, b.idx)
+                        : Integer.compare(a.processingTime, b.processingTime));
+
+        int res[] = new int[n];
+
+        int j = 0;
+        int currTime = 0;
+        int currIdx = 0;
+
+        while (currIdx < n || !pq.isEmpty()) {
+
+            if (pq.isEmpty() && currTime < sortedArr[currIdx].startTime) {
+                currTime = sortedArr[currIdx].startTime;
+            }
+
+            while (currIdx < n && sortedArr[currIdx].startTime <= currTime) {
+                pq.add(sortedArr[currIdx]);
+                currIdx++;
+            }
+
+            Task t = pq.poll();
+            currTime += t.processingTime;
+            res[j++] = t.idx;
+        }
+        return res;
+    }
+}
