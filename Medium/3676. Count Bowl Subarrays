@@ -1,0 +1,40 @@
+class Solution {
+    public long bowlSubarrays(int[] nums) {
+        int n = nums.length;
+
+        int pge[] = new int[n];
+        int nge[] = new int[n];
+
+        Stack<Integer> st = new Stack<>();
+
+        // firstly we will calculate the previous greater element for each element of array
+        for (int i = 0; i < n; i++) {
+            while (!st.isEmpty() && nums[st.peek()] < nums[i]) {
+                st.pop();
+            }
+            pge[i] = st.isEmpty() ? -1 : st.peek();
+            st.push(i);
+        }
+
+        st.clear();
+
+        // now we will calculate the next greater element of each element of array
+        for (int i = n - 1; i >= 0; i--) {
+            while (!st.isEmpty() && nums[st.peek()] < nums[i]) {
+                st.pop();
+            }
+            nge[i] = st.isEmpty() ? -1 : st.peek();
+            st.push(i);
+        }
+
+        int count = 0;
+
+        // now will find the element for which both nge and pge is not equal to -1 .. if we find that element then add it into count
+        for (int i = 0; i < n; i++) {
+            if (nge[i] != -1 && pge[i] != -1) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
