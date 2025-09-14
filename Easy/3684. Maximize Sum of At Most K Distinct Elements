@@ -1,0 +1,41 @@
+class Solution {
+    public int[] maxKDistinct(int[] nums, int k) {
+        HashSet<Integer> set = new HashSet<>();
+
+        // add all the elements into a set so as to get distinct elements
+        for (int num : nums) {
+            set.add(num);
+        }
+
+        // make a new array and tranfer all the set elements into the new Array
+        int newNums[]=new int[set.size()];
+
+        Iterator<Integer> it=set.iterator();
+        int m=0;
+
+        while(it.hasNext()){
+            newNums[m]=it.next();
+            m++;
+        }
+
+        // after transferring the elements from the set into the array , sort the elements in ascending order and reverse it to get descending order
+        Arrays.sort(newNums);
+        int nl=newNums.length;
+        for (int i = 0; i < nl / 2; i++) {
+            int temp = newNums[i];
+            newNums[i] = newNums[nl - 1 - i];
+            newNums[nl - 1 - i] = temp;
+        }
+
+        List<Integer> list=new ArrayList<>();
+        int j=0;
+
+        int size=Math.min(nl,k);
+        int arr[]=new int[size];
+
+        for(int i=0;i<size;i++){
+            arr[i]=newNums[i];
+        }
+        return arr;
+    }
+}
