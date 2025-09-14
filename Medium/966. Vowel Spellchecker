@@ -1,0 +1,33 @@
+class Solution {
+    public String[] spellchecker(String[] wordlist, String[] queries) {
+        Set<String> checkWord=new HashSet<>();
+        HashMap<String,String> normalWord=new HashMap<>();
+        HashMap<String,String> vowels=new HashMap<>();
+
+        for(String s:wordlist){
+            checkWord.add(s); // storing the string as it is
+            String lcase=s.toLowerCase();
+            normalWord.putIfAbsent(lcase,s); // convert to lowercase and then store it with the real case word
+            String mask=lcase.replaceAll("[aeiou]","*"); // change all the vowels to * and then put it with the real word present in wordlist
+            vowels.putIfAbsent(mask,s);
+        }
+
+        String ans[]=new String[queries.length];
+
+        for(int i=0;i<queries.length;i++){
+            String temp=queries[i];
+
+            if(checkWord.contains(temp)){
+                ans[i]=temp;
+            }
+            else if(normalWord.containsKey(temp.toLowerCase())){
+                ans[i]=normalWord.get(temp.toLowerCase());
+            }
+            else{
+                String mask=temp.toLowerCase().replaceAll("[aeiou]","*");
+                ans[i]=vowels.getOrDefault(mask,"");
+            }
+        }
+        return ans;
+    }
+}
