@@ -1,0 +1,39 @@
+class Solution {
+    public int numSquares(int n) {
+        List<Integer> squares = new ArrayList<>();
+        for (int i = 1; i*i <= n; i++) {
+            squares.add(i*i);
+        }
+        int dp[][]=new int[squares.size()][n+1];
+
+        for(int row[]:dp){
+            Arrays.fill(row,-1);
+        }
+        return helper(n, squares, 0, 0, dp);
+    }
+
+    private int helper(int n, List<Integer> squares, int idx, int sum, int dp[][]) {
+        if (sum > n){
+            return Integer.MAX_VALUE;
+        }   
+        if (sum == n){
+            return 0;
+        }               
+
+        if (idx == squares.size()) {
+            return Integer.MAX_VALUE;
+        } 
+        if(dp[idx][sum]!=-1){
+            return dp[idx][sum];
+        }
+        int notTake = helper(n, squares, idx + 1, sum,dp);
+
+        int take = helper(n, squares, idx, sum + squares.get(idx),dp);
+        if (take != Integer.MAX_VALUE) {
+            take += 1;
+        }
+
+        dp[idx][sum]=Math.min(take, notTake);
+        return dp[idx][sum];
+    }
+}
