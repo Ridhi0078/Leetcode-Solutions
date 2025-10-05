@@ -1,0 +1,49 @@
+class ThroneInheritance {
+    HashMap<String, List<String>> map;
+    String king = "";
+    HashSet<String> set = new HashSet<>();
+
+    public ThroneInheritance(String kingName) {
+        king = kingName;
+        map = new HashMap<>();
+    }
+
+    public void birth(String parentName, String childName) {
+        map.putIfAbsent(parentName, new ArrayList<>());
+        map.get(parentName).add(childName);
+    }
+
+    public void death(String name) {
+        set.add(name);
+    }
+
+    public List<String> getInheritanceOrder() {
+        List<String> list = new ArrayList<>();
+
+        Stack<String> st = new Stack<>();
+        st.add(king);
+
+        while (!st.isEmpty()) {
+            String s = st.pop();
+            if (!set.contains(s)) {
+                list.add(s);
+            }
+
+            if (map.containsKey(s)) {
+                List<String> child = map.get(s);
+                for (int i = child.size() - 1; i >= 0; i--) {
+                    st.push(child.get(i));
+                }
+            }
+        }
+        return list;
+    }
+}
+
+/**
+ * Your ThroneInheritance object will be instantiated and called as such:
+ * ThroneInheritance obj = new ThroneInheritance(kingName);
+ * obj.birth(parentName,childName);
+ * obj.death(name);
+ * List<String> param_3 = obj.getInheritanceOrder();
+ */
