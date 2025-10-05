@@ -1,0 +1,96 @@
+class LockingTree {
+    int nums[];
+    HashMap<Integer, List<Integer>> parentMap; // storing the parent and the child nodes
+    HashMap<Integer, Integer> lockMap; // map for storing the lock nodes and users that locks it
+
+    public LockingTree(int[] parent) {
+        nums = parent;
+        parentMap = new HashMap<>();
+        lockMap = new HashMap<>();
+
+        for (int i = 0; i < nums.length; i++) {
+            parentMap.putIfAbsent(nums[i], new ArrayList<>());
+            parentMap.get(nums[i]).add(i);
+        }
+    }
+
+    public boolean lock(int num, int user) {
+        if (lockMap.containsKey(num)) {
+            return false;
+        }
+        lockMap.put(num, user);
+        return true;
+    }
+
+    public boolean unlock(int num, int user) {
+        if (!lockMap.containsKey(num)) {
+            return false;
+        }
+
+        if (!lockMap.get(num).equals(user)) {
+            return false;
+        }
+
+        lockMap.remove(num);
+        return true;
+    }
+
+    public boolean upgrade(int num, int user) {
+
+        if (lockMap.containsKey(num)) {
+            return false;
+        }
+
+        List<Integer> toUnlockdesc = new ArrayList<>();
+        collectLockedDescendents(num, toUnlockdesc);
+
+        if (toUnlockdesc.isEmpty()) {
+            return false;
+        }
+
+        if (hasAnyLockedAncestors(num)) {
+            return false;
+        }
+
+        for (int ele : toUnlockdesc) {
+            lockMap.remove(ele);
+        }
+
+        lockMap.put(num, user);
+        return true;
+    }
+
+    public boolean hasAnyLockedAncestors(int node) {
+        int par = nums[node];
+        while (par != -1) {
+            if (lockMap.containsKey(par)) {
+                return true;
+            }
+            par = nums[par];
+        }
+        return false;
+    }
+
+    public void collectLockedDescendents(int node, List<Integer> lockedList) {
+        List<Integer> childList = parentMap.get(node);
+
+        if (childList == null) {
+            return;
+        }
+
+        for (int children : childList) {
+            if (lockMap.containsKey(children)) {
+                lockedList.add(children);
+            }
+            collectLockedDescendents(children,lockedList);
+        }
+    }
+}
+
+/**
+ * Your LockingTree object will be instantiated and called as such:
+ * LockingTree obj = new LockingTree(parent);
+ * boolean param_1 = obj.lock(num,user);
+ * boolean param_2 = obj.unlock(num,user);
+ * boolean param_3 = obj.upgrade(num,user);
+ */
