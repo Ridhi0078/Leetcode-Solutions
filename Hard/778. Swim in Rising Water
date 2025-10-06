@@ -1,0 +1,50 @@
+// using dijkstra's algorithm
+class Tuple {
+    int value;
+    int row;
+    int col;
+
+    public Tuple(int value, int row, int col) {
+        this.value = value;
+        this.row = row;
+        this.col = col;
+    }
+}
+
+class Solution {
+    public int swimInWater(int[][] grid) {
+        int n = grid.length;
+        int dirs[][] = { { 0, 1 }, { 0, -1 }, { 1, 0 }, { -1, 0 } };
+        boolean visited[][] = new boolean[n][n];
+
+        PriorityQueue<Tuple> pq = new PriorityQueue<>((a, b) -> a.value - b.value);
+
+        pq.add(new Tuple(grid[0][0], 0, 0));
+        visited[0][0] = true;
+        int ans = 0;
+
+        while (!pq.isEmpty()) {
+            Tuple t = pq.poll();
+            int val = t.value;
+            int r = t.row;
+            int c = t.col;
+
+            ans = Math.max(ans, val);
+
+            if (r == n - 1 && c == n - 1) {
+                return ans;
+            }
+
+            for (int dir[] : dirs) {
+                int drow = r + dir[0];
+                int dcol = c + dir[1];
+
+                if (drow >= 0 && drow < n && dcol >= 0 && dcol < n && !visited[drow][dcol]) {
+                    visited[drow][dcol] = true;
+                    pq.add(new Tuple(grid[drow][dcol], drow, dcol));
+                }
+            }
+        }
+        return ans;
+    }
+}
