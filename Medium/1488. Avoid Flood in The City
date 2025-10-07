@@ -1,0 +1,43 @@
+class Solution {
+    public int[] avoidFlood(int[] rains) {
+        HashMap<Integer, Queue<Integer>> map = new HashMap<>();
+        Set<Integer> fullLakes = new HashSet<>();
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[0] - b[0]);
+
+        for (int i = 0; i < rains.length; i++) {
+            map.putIfAbsent(rains[i], new LinkedList<>());
+            map.get(rains[i]).add(i);
+        }
+
+        int ans[] = new int[rains.length];
+
+        for (int i = 0; i < rains.length; i++) {
+            if (rains[i] > 0) {
+                ans[i] = -1;
+                int lake = rains[i];
+
+                map.get(lake).poll();
+
+                if (fullLakes.contains(lake)) {
+                    // flood will occur no matter which lake we choose
+                    return new int[]{};
+                }
+
+                fullLakes.add(lake);
+
+                if (!map.get(lake).isEmpty()) {
+                    pq.add(new int[] { map.get(lake).peek(), lake });
+                }
+            } else {
+                if (!pq.isEmpty()) {
+                    int[] res = pq.poll();
+                    ans[i] = res[1];
+                    fullLakes.remove(res[1]);
+                } else {
+                    ans[i] = 1;
+                }
+            }
+        }
+        return ans;
+    }
+}
