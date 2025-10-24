@@ -1,0 +1,71 @@
+// Without backtracking
+class Solution {
+
+    private boolean balanced(int num) {
+        int[] freq = new int[10];
+
+        while (num > 0) {
+            int digit = num % 10;
+            freq[digit]++;
+            num /= 10;
+        }
+
+        for (int d = 0; d < 10; d++) {
+            if (freq[d] != 0 && freq[d] != d) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public int nextBeautifulNumber(int n) {
+        for (int num = n + 1; num <= 1224444; num++) {
+            if (balanced(num)) {
+                return num;
+            }
+        }
+        return -1;
+    }
+}
+
+// With backtracking
+class Solution {
+    int digitCount[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+    public int backtrack(int n, int currNum, int leftDigits) {
+        if (leftDigits == 0) {
+            // we will check if the number of digits are valid i.e. if there is any digit in the digitCount where the index is not equal to value stored there
+            for (int digit = 1; digit <= 9; digit++) {
+                if (digitCount[digit] != 0 && digitCount[digit] != digit) {
+                    return 0;
+                }
+            }
+            return currNum > n ? currNum : 0;
+        }
+
+        int res = 0;
+        for (int digit = 1; digit <= 9; digit++) {
+            if (digitCount[digit] != 0 && digitCount[digit] <= leftDigits) {
+                digitCount[digit]--;
+                res = backtrack(n, currNum * 10 + digit, leftDigits - 1);
+                digitCount[digit]++;
+            }
+            if (res != 0) {
+                break;
+            }
+        }
+        return res;
+
+    }
+
+    public int nextBeautifulNumber(int n) {
+        int numofDig = String.valueOf(n).length();
+
+        int res = backtrack(n, 0, numofDig);
+        if (res == 0) {
+            res = backtrack(n, 0, numofDig + 1);
+        }
+        return res;
+    }
+}
